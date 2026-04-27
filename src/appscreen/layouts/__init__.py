@@ -7,10 +7,12 @@ from .creative import FanLayout, PerspectiveLayout, Stack3DLayout, TripleRowLayo
 from .duo import DuoHorizontalLayout, DuoVerticalLayout
 from .grid import Grid2x2Layout
 from .single import SingleLayout
+from .frame_single import FrameSingleLayout
 
 __all__ = [
     "BaseLayout",
     "SingleLayout",
+    "FrameSingleLayout",
     "DuoHorizontalLayout",
     "DuoVerticalLayout",
     "Grid2x2Layout",
@@ -23,6 +25,7 @@ __all__ = [
 
 LAYOUT_MAP: dict[str, Type[BaseLayout]] = {
     "single": SingleLayout,
+    "frame-single": FrameSingleLayout,
     "duo-horizontal": DuoHorizontalLayout,
     "duo-vertical": DuoVerticalLayout,
     "grid-2x2": Grid2x2Layout,
