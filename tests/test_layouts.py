@@ -7,8 +7,12 @@ from appscreen.layouts import (
     BaseLayout,
     DuoHorizontalLayout,
     DuoVerticalLayout,
+    FanLayout,
     Grid2x2Layout,
+    PerspectiveLayout,
     SingleLayout,
+    Stack3DLayout,
+    TripleRowLayout,
     get_layout,
 )
 
@@ -170,6 +174,26 @@ class TestGetLayout:
         layout = get_layout("grid-2x2", width=1600, height=1600)
         assert isinstance(layout, Grid2x2Layout)
 
+    def test_get_fan_layout(self):
+        """Test getting fan layout."""
+        layout = get_layout("fan", width=1600, height=1200)
+        assert isinstance(layout, FanLayout)
+
+    def test_get_perspective_layout(self):
+        """Test getting perspective layout."""
+        layout = get_layout("perspective", width=1200, height=1600)
+        assert isinstance(layout, PerspectiveLayout)
+
+    def test_get_stack_3d_layout(self):
+        """Test getting stack-3d layout."""
+        layout = get_layout("stack-3d", width=1600, height=1200)
+        assert isinstance(layout, Stack3DLayout)
+
+    def test_get_triple_row_layout(self):
+        """Test getting triple-row layout."""
+        layout = get_layout("triple-row", width=1800, height=1200)
+        assert isinstance(layout, TripleRowLayout)
+
     def test_unknown_layout_raises_error(self):
         """Test that unknown layout name raises error."""
         with pytest.raises(ValueError) as exc_info:
@@ -189,6 +213,139 @@ class TestGetLayout:
         )
         assert layout.background_color == (128, 128, 128)
         assert layout.padding == 100
+
+
+class TestFanLayout:
+    """Tests for FanLayout."""
+
+    def test_render_multiple_screenshots(self, sample_screenshots):
+        """Test rendering multiple screenshots in fan pattern."""
+        layout = FanLayout(width=1600, height=1200)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1600, 1200)
+        assert result.mode == 'RGB'
+
+    def test_render_single_screenshot(self, sample_screenshot):
+        """Test rendering a single screenshot."""
+        layout = FanLayout(width=1200, height=1600)
+        result = layout.render([sample_screenshot])
+
+        assert result.size == (1200, 1600)
+
+    def test_render_empty_screenshots_raises_error(self):
+        """Test that empty screenshots list raises error."""
+        layout = FanLayout(width=1200, height=1600)
+        with pytest.raises(ValueError, match="at least one screenshot"):
+            layout.render([])
+
+    def test_custom_angle_and_radius(self, sample_screenshots):
+        """Test custom angle and radius parameters."""
+        layout = FanLayout(width=1600, height=1200, angle=45, radius=150)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1600, 1200)
+
+    def test_different_directions(self, sample_screenshots):
+        """Test different fan directions."""
+        for direction in ['up', 'down', 'left', 'right']:
+            layout = FanLayout(width=1600, height=1200, direction=direction)
+            result = layout.render(sample_screenshots[:3])
+
+            assert result.size == (1600, 1200)
+
+
+class TestPerspectiveLayout:
+    """Tests for PerspectiveLayout."""
+
+    def test_render_single_screenshot(self, sample_screenshot):
+        """Test rendering a screenshot with perspective effect."""
+        layout = PerspectiveLayout(width=1200, height=1600)
+        result = layout.render([sample_screenshot])
+
+        assert result.size == (1200, 1600)
+        assert result.mode == 'RGB'
+
+    def test_render_empty_screenshots_raises_error(self):
+        """Test that empty screenshots list raises error."""
+        layout = PerspectiveLayout(width=1200, height=1600)
+        with pytest.raises(ValueError, match="at least one screenshot"):
+            layout.render([])
+
+    def test_custom_skew_parameters(self, sample_screenshot):
+        """Test custom skew parameters."""
+        layout = PerspectiveLayout(width=1200, height=1600, skew_x=0.1, skew_y=0.2)
+        result = layout.render([sample_screenshot])
+
+        assert result.size == (1200, 1600)
+
+    def test_shadow_disabled(self, sample_screenshot):
+        """Test rendering without shadow."""
+        layout = PerspectiveLayout(width=1200, height=1600, shadow=False)
+        result = layout.render([sample_screenshot])
+
+        assert result.size == (1200, 1600)
+
+
+class TestStack3DLayout:
+    """Tests for Stack3DLayout."""
+
+    def test_render_multiple_screenshots(self, sample_screenshots):
+        """Test rendering multiple screenshots with 3D stack effect."""
+        layout = Stack3DLayout(width=1600, height=1200)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1600, 1200)
+        assert result.mode == 'RGB'
+
+    def test_render_single_screenshot(self, sample_screenshot):
+        """Test rendering a single screenshot."""
+        layout = Stack3DLayout(width=1200, height=1600)
+        result = layout.render([sample_screenshot])
+
+        assert result.size == (1200, 1600)
+
+    def test_render_empty_screenshots_raises_error(self):
+        """Test that empty screenshots list raises error."""
+        layout = Stack3DLayout(width=1200, height=1600)
+        with pytest.raises(ValueError, match="at least one screenshot"):
+            layout.render([])
+
+    def test_custom_depth_and_rotation(self, sample_screenshots):
+        """Test custom depth and rotation parameters."""
+        layout = Stack3DLayout(width=1600, height=1200, depth=50, rotation=10)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1600, 1200)
+
+
+class TestTripleRowLayout:
+    """Tests for TripleRowLayout."""
+
+    def test_render_three_screenshots(self, sample_screenshots):
+        """Test rendering three screenshots side by side."""
+        layout = TripleRowLayout(width=1800, height=1200)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1800, 1200)
+        assert result.mode == 'RGB'
+
+    def test_require_exactly_three_screenshots(self, sample_screenshots):
+        """Test that exactly three screenshots are required."""
+        layout = TripleRowLayout(width=1800, height=1200)
+
+        with pytest.raises(ValueError, match="exactly 3 screenshots"):
+            layout.render([sample_screenshots[0]])
+
+        with pytest.raises(ValueError, match="exactly 3 screenshots"):
+            layout.render(sample_screenshots)
+
+    def test_custom_spacing(self, sample_screenshots):
+        """Test custom spacing between screenshots."""
+        layout = TripleRowLayout(width=1800, height=1200, spacing=40)
+        result = layout.render(sample_screenshots[:3])
+
+        assert result.size == (1800, 1200)
 
 
 class TestBaseLayout:

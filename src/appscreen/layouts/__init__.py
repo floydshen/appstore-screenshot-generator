@@ -3,6 +3,7 @@
 from typing import Type
 
 from .base import BaseLayout
+from .creative import FanLayout, PerspectiveLayout, Stack3DLayout, TripleRowLayout
 from .duo import DuoHorizontalLayout, DuoVerticalLayout
 from .grid import Grid2x2Layout
 from .single import SingleLayout
@@ -13,6 +14,10 @@ __all__ = [
     "DuoHorizontalLayout",
     "DuoVerticalLayout",
     "Grid2x2Layout",
+    "FanLayout",
+    "PerspectiveLayout",
+    "Stack3DLayout",
+    "TripleRowLayout",
     "get_layout",
 ]
 
@@ -21,6 +26,10 @@ LAYOUT_MAP: dict[str, Type[BaseLayout]] = {
     "duo-horizontal": DuoHorizontalLayout,
     "duo-vertical": DuoVerticalLayout,
     "grid-2x2": Grid2x2Layout,
+    "fan": FanLayout,
+    "perspective": PerspectiveLayout,
+    "stack-3d": Stack3DLayout,
+    "triple-row": TripleRowLayout,
 }
 
 
