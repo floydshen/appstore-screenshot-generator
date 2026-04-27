@@ -131,5 +131,30 @@ def themes():
     click.echo(f"\nTotal: {len(PRESET_THEMES)} themes")
 
 
+@main.command()
+@click.option("--host", default="127.0.0.1", help="Server host address")
+@click.option("--port", default=7860, help="Server port")
+@click.option("--share", is_flag=True, help="Create a public share link")
+def preview(host: str, port: int, share: bool):
+    """Launch the Gradio Web UI for interactive preview.
+    
+    Opens a web browser with an interactive interface for generating
+    App Store screenshots with real-time preview.
+    """
+    from .webui import launch_ui
+    
+    click.secho(f"\n🚀 Launching Web UI...", fg="cyan")
+    click.echo(f"   Host: {host}")
+    click.echo(f"   Port: {port}")
+    if share:
+        click.echo(f"   Share: enabled (public link will be generated)")
+    click.echo(f"\n   Press Ctrl+C to stop\n")
+    
+    try:
+        launch_ui(server_name=host, server_port=port, share=share)
+    except KeyboardInterrupt:
+        click.secho("\n\n👋 Web UI stopped", fg="yellow")
+
+
 if __name__ == "__main__":
     main()
