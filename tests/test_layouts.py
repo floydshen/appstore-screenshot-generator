@@ -4,7 +4,6 @@ import pytest
 from PIL import Image
 
 from appscreen.layouts import (
-    BaseLayout,
     DuoHorizontalLayout,
     DuoVerticalLayout,
     FanLayout,
@@ -20,14 +19,14 @@ from appscreen.layouts import (
 @pytest.fixture
 def sample_screenshot():
     """Create a sample screenshot image."""
-    return Image.new('RGB', (400, 800), color='blue')
+    return Image.new("RGB", (400, 800), color="blue")
 
 
 @pytest.fixture
 def sample_screenshots(sample_screenshot):
     """Create multiple sample screenshots."""
-    colors = ['red', 'green', 'blue', 'yellow']
-    return [Image.new('RGB', (400, 800), color=c) for c in colors]
+    colors = ["red", "green", "blue", "yellow"]
+    return [Image.new("RGB", (400, 800), color=c) for c in colors]
 
 
 class TestSingleLayout:
@@ -39,11 +38,11 @@ class TestSingleLayout:
         result = layout.render([sample_screenshot])
 
         assert result.size == (1200, 1600)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_render_scales_large_screenshot(self):
         """Test that large screenshots are scaled down."""
-        large_screenshot = Image.new('RGB', (2000, 4000), color='blue')
+        large_screenshot = Image.new("RGB", (2000, 4000), color="blue")
         layout = SingleLayout(width=1200, height=1600, padding=40)
         result = layout.render([large_screenshot])
 
@@ -60,7 +59,7 @@ class TestSingleLayout:
     def test_custom_background_color(self):
         """Test custom background color."""
         layout = SingleLayout(width=1200, height=1600, background_color=(255, 0, 0))
-        screenshot = Image.new('RGB', (100, 200), color='blue')
+        screenshot = Image.new("RGB", (100, 200), color="blue")
         result = layout.render([screenshot])
 
         # Check that background color appears in corners
@@ -69,7 +68,7 @@ class TestSingleLayout:
     def test_custom_padding(self):
         """Test custom padding."""
         layout = SingleLayout(width=1200, height=1600, padding=100)
-        screenshot = Image.new('RGB', (400, 800), color='blue')
+        screenshot = Image.new("RGB", (400, 800), color="blue")
         result = layout.render([screenshot])
 
         assert result.size == (1200, 1600)
@@ -84,7 +83,7 @@ class TestDuoHorizontalLayout:
         result = layout.render(sample_screenshots[:2])
 
         assert result.size == (1600, 1200)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_require_exactly_two_screenshots(self, sample_screenshots):
         """Test that exactly two screenshots are required."""
@@ -113,7 +112,7 @@ class TestDuoVerticalLayout:
         result = layout.render(sample_screenshots[:2])
 
         assert result.size == (1200, 1600)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_require_exactly_two_screenshots(self, sample_screenshots):
         """Test that exactly two screenshots are required."""
@@ -132,7 +131,7 @@ class TestGrid2x2Layout:
         result = layout.render(sample_screenshots)
 
         assert result.size == (1600, 1600)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_require_exactly_four_screenshots(self, sample_screenshots):
         """Test that exactly four screenshots are required."""
@@ -224,7 +223,7 @@ class TestFanLayout:
         result = layout.render(sample_screenshots[:3])
 
         assert result.size == (1600, 1200)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_render_single_screenshot(self, sample_screenshot):
         """Test rendering a single screenshot."""
@@ -248,7 +247,7 @@ class TestFanLayout:
 
     def test_different_directions(self, sample_screenshots):
         """Test different fan directions."""
-        for direction in ['up', 'down', 'left', 'right']:
+        for direction in ["up", "down", "left", "right"]:
             layout = FanLayout(width=1600, height=1200, direction=direction)
             result = layout.render(sample_screenshots[:3])
 
@@ -264,7 +263,7 @@ class TestPerspectiveLayout:
         result = layout.render([sample_screenshot])
 
         assert result.size == (1200, 1600)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_render_empty_screenshots_raises_error(self):
         """Test that empty screenshots list raises error."""
@@ -296,7 +295,7 @@ class TestStack3DLayout:
         result = layout.render(sample_screenshots[:3])
 
         assert result.size == (1600, 1200)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_render_single_screenshot(self, sample_screenshot):
         """Test rendering a single screenshot."""
@@ -328,7 +327,7 @@ class TestTripleRowLayout:
         result = layout.render(sample_screenshots[:3])
 
         assert result.size == (1800, 1200)
-        assert result.mode == 'RGB'
+        assert result.mode == "RGB"
 
     def test_require_exactly_three_screenshots(self, sample_screenshots):
         """Test that exactly three screenshots are required."""
@@ -357,12 +356,12 @@ class TestBaseLayout:
         canvas = layout.create_canvas()
 
         assert canvas.size == (800, 600)
-        assert canvas.mode == 'RGB'
+        assert canvas.mode == "RGB"
 
     def test_scale_to_fit_smaller(self):
         """Test scaling down an image."""
         layout = SingleLayout(width=800, height=600)
-        large_image = Image.new('RGB', (1600, 1200), color='red')
+        large_image = Image.new("RGB", (1600, 1200), color="red")
 
         scaled = layout._scale_to_fit(large_image, 400, 300)
 
@@ -374,7 +373,7 @@ class TestBaseLayout:
     def test_scale_to_fit_no_scaling_needed(self):
         """Test that small images are not scaled up."""
         layout = SingleLayout(width=800, height=600)
-        small_image = Image.new('RGB', (100, 100), color='blue')
+        small_image = Image.new("RGB", (100, 100), color="blue")
 
         scaled = layout._scale_to_fit(small_image, 400, 400)
 

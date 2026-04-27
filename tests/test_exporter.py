@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from PIL import Image
 
-from appscreen.config import AppConfig, Config, OutputConfig
+from appscreen.config import Config, OutputConfig
 from appscreen.exporter import Exporter
 
 

@@ -1,10 +1,8 @@
 """Tests for configuration parsing and validation."""
 
 import tempfile
-from pathlib import Path
 
 import pytest
-import yaml
 
 from appscreen.config import (
     AppConfig,
@@ -17,7 +15,6 @@ from appscreen.config import (
     OutputConfig,
     ScreenshotConfig,
     ShadowConfig,
-    TextPositionConfig,
     ThemeConfig,
     load_config,
 )
@@ -209,7 +206,9 @@ class TestAppConfig:
 
     def test_optional_fields(self):
         """Test optional app configuration fields."""
-        app = AppConfig(name="MyApp", bundle_id="com.example.myapp", version="1.0.0", icon="icon.png")
+        app = AppConfig(
+            name="MyApp", bundle_id="com.example.myapp", version="1.0.0", icon="icon.png"
+        )
         assert app.version == "1.0.0"
         assert app.icon == "icon.png"
 

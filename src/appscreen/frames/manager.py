@@ -224,7 +224,9 @@ class FrameManager:
         shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
 
         # Crop to original size with offset
-        final_shadow = Image.new("RGBA", (width + abs(offset[0]), height + abs(offset[1])), (0, 0, 0, 0))
+        final_shadow = Image.new(
+            "RGBA", (width + abs(offset[0]), height + abs(offset[1])), (0, 0, 0, 0)
+        )
         paste_x = max(0, -offset[0])
         paste_y = max(0, -offset[1])
         final_shadow.paste(shadow, (paste_x, paste_y))

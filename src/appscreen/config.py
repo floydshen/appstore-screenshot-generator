@@ -1,10 +1,10 @@
 """Configuration models for AppStore Screenshot Generator using Pydantic."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+from typing import Dict, List, Optional, Union
 
 import yaml
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 class IconConfig(BaseModel):
@@ -35,12 +35,16 @@ class ShadowConfig(BaseModel):
 class LayoutConfig(BaseModel):
     """Layout configuration for screenshots."""
 
-    type: str = Field(default="single", description="Layout type (single, duo, grid, fan, perspective, etc.)")
+    type: str = Field(
+        default="single", description="Layout type (single, duo, grid, fan, perspective, etc.)"
+    )
     spacing: int = Field(default=20, ge=0, le=200, description="Spacing between devices in pixels")
     align: str = Field(default="center", description="Alignment (left, center, right)")
     angle: float = Field(default=0.0, ge=-180.0, le=180.0, description="Rotation angle in degrees")
     radius: int = Field(default=40, ge=0, le=200, description="Corner radius for devices")
-    direction: str = Field(default="horizontal", description="Layout direction (horizontal, vertical)")
+    direction: str = Field(
+        default="horizontal", description="Layout direction (horizontal, vertical)"
+    )
     skew_x: float = Field(default=0.0, ge=-45.0, le=45.0, description="X-axis skew angle")
     skew_y: float = Field(default=0.0, ge=-45.0, le=45.0, description="Y-axis skew angle")
     shadow: Optional[ShadowConfig] = Field(default=None, description="Device shadow configuration")
@@ -52,8 +56,12 @@ class ScreenshotConfig(BaseModel):
     file: Optional[str] = Field(default=None, description="Single screenshot file path")
     files: Optional[List[str]] = Field(default=None, description="Multiple screenshot file paths")
     caption: Optional[str] = Field(default=None, description="Caption text for the screenshot")
-    layout: Optional[LayoutConfig] = Field(default=None, description="Layout configuration for this screenshot")
-    icon: Optional[IconConfig] = Field(default=None, description="Icon configuration for this screenshot")
+    layout: Optional[LayoutConfig] = Field(
+        default=None, description="Layout configuration for this screenshot"
+    )
+    icon: Optional[IconConfig] = Field(
+        default=None, description="Icon configuration for this screenshot"
+    )
 
     @model_validator(mode="after")
     def validate_file_or_files(self) -> "ScreenshotConfig":
@@ -87,7 +95,9 @@ class TextPositionConfig(BaseModel):
     x: Optional[int] = Field(default=None, description="X position (None for auto)")
     y: Optional[int] = Field(default=None, description="Y position (None for auto)")
     align: str = Field(default="center", description="Text alignment (left, center, right)")
-    vertical_align: str = Field(default="top", description="Vertical alignment (top, center, bottom)")
+    vertical_align: str = Field(
+        default="top", description="Vertical alignment (top, center, bottom)"
+    )
 
 
 class FrameConfig(BaseModel):
@@ -108,7 +118,9 @@ class BackgroundConfig(BaseModel):
         default_factory=lambda: ["#667eea", "#764ba2"],
         description="Gradient colors (list of hex colors)",
     )
-    gradient_direction: str = Field(default="vertical", description="Gradient direction (vertical, horizontal, diagonal)")
+    gradient_direction: str = Field(
+        default="vertical", description="Gradient direction (vertical, horizontal, diagonal)"
+    )
     image: Optional[str] = Field(default=None, description="Background image path or URL")
     opacity: float = Field(default=1.0, ge=0.0, le=1.0, description="Background opacity")
 
@@ -127,17 +139,25 @@ class ThemeConfig(BaseModel):
     """Theme configuration."""
 
     name: str = Field(default="default", description="Theme name")
-    background: BackgroundConfig = Field(default_factory=BackgroundConfig, description="Background configuration")
+    background: BackgroundConfig = Field(
+        default_factory=BackgroundConfig, description="Background configuration"
+    )
     font: FontConfig = Field(default_factory=FontConfig, description="Font configuration")
-    text_position: TextPositionConfig = Field(default_factory=TextPositionConfig, description="Text position")
+    text_position: TextPositionConfig = Field(
+        default_factory=TextPositionConfig, description="Text position"
+    )
     text_padding: int = Field(default=40, ge=0, le=200, description="Text padding in pixels")
-    frame: FrameConfig = Field(default_factory=FrameConfig, description="Device frame configuration")
+    frame: FrameConfig = Field(
+        default_factory=FrameConfig, description="Device frame configuration"
+    )
 
 
 class OutputConfig(BaseModel):
     """Output configuration."""
 
-    fastlane_compatible: bool = Field(default=True, description="Output in fastlane-compatible format")
+    fastlane_compatible: bool = Field(
+        default=True, description="Output in fastlane-compatible format"
+    )
     output_dir: str = Field(default="./fastlane/metadata", description="Output directory")
     locale_mapping: Dict[str, str] = Field(
         default_factory=lambda: {
@@ -168,7 +188,9 @@ class Config(BaseModel):
     """Root configuration model."""
 
     app: AppConfig = Field(..., description="App configuration")
-    screenshots: List[ScreenshotConfig] = Field(default_factory=list, description="List of screenshot configurations")
+    screenshots: List[ScreenshotConfig] = Field(
+        default_factory=list, description="List of screenshot configurations"
+    )
     devices: List[str] = Field(
         default_factory=lambda: [
             "iphone-65",

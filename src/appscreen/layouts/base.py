@@ -12,7 +12,9 @@ class BaseLayout(ABC):
     Each layout defines how screenshots are arranged on the canvas.
     """
 
-    def __init__(self, width: int, height: int, background_color: Tuple[int, int, int] = (255, 255, 255)):
+    def __init__(
+        self, width: int, height: int, background_color: Tuple[int, int, int] = (255, 255, 255)
+    ):
         """Initialize the layout with canvas dimensions.
 
         Args:
@@ -43,7 +45,7 @@ class BaseLayout(ABC):
         Returns:
             New PIL Image (RGB mode)
         """
-        return Image.new('RGB', (self.width, self.height), self.background_color)
+        return Image.new("RGB", (self.width, self.height), self.background_color)
 
     def _scale_to_fit(self, image: Image.Image, max_width: int, max_height: int) -> Image.Image:
         """Scale image to fit within given dimensions while preserving aspect ratio.

@@ -2,7 +2,6 @@
 
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 from PIL import Image
@@ -135,7 +134,6 @@ class TestFrameManager:
         assert isinstance(result, Image.Image)
         assert result.mode == "RGBA"
         # Result should be frame-sized, not screenshot-sized
-        config = manager.get_frame_config("iphone-15-pro-max")
         assert result.width > screenshot.width
         assert result.height > screenshot.height
 
@@ -214,7 +212,9 @@ class TestFrameManagerIntegration:
 
         for device in devices:
             config = manager.get_frame_config(device)
-            screenshot = Image.new("RGB", (config.screen_width, config.screen_height), (100, 100, 100))
+            screenshot = Image.new(
+                "RGB", (config.screen_width, config.screen_height), (100, 100, 100)
+            )
 
             result = manager.apply_frame(screenshot, device, shadow=False)
             assert result is not None, f"Failed to apply frame for {device}"

@@ -1,10 +1,10 @@
 """Tests for CLI commands."""
 
 import pytest
-from pathlib import Path
 from click.testing import CliRunner
 
 from appscreen.cli import main
+from appscreen.config import Config, AppConfig
 
 
 @pytest.fixture
@@ -65,7 +65,15 @@ class TestInitCommand:
         """Test that init creates a config.yaml file."""
         result = runner.invoke(
             main,
-            ["init", "--app-name", "TestApp", "--bundle-id", "com.test.app", "--output", str(tmp_path)],
+            [
+                "init",
+                "--app-name",
+                "TestApp",
+                "--bundle-id",
+                "com.test.app",
+                "--output",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 0
@@ -75,7 +83,15 @@ class TestInitCommand:
         """Test that init creates a screenshots directory."""
         result = runner.invoke(
             main,
-            ["init", "--app-name", "TestApp", "--bundle-id", "com.test.app", "--output", str(tmp_path)],
+            [
+                "init",
+                "--app-name",
+                "TestApp",
+                "--bundle-id",
+                "com.test.app",
+                "--output",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 0
@@ -86,11 +102,19 @@ class TestInitCommand:
         """Test that generated config contains app information."""
         result = runner.invoke(
             main,
-            ["init", "--app-name", "TestApp", "--bundle-id", "com.test.app", "--output", str(tmp_path)],
+            [
+                "init",
+                "--app-name",
+                "TestApp",
+                "--bundle-id",
+                "com.test.app",
+                "--output",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 0
-        
+
         config = Config.from_yaml(tmp_path / "config.yaml")
         assert config.app.name == "TestApp"
         assert config.app.bundle_id == "com.test.app"
@@ -99,7 +123,15 @@ class TestInitCommand:
         """Test that init shows success message."""
         result = runner.invoke(
             main,
-            ["init", "--app-name", "TestApp", "--bundle-id", "com.test.app", "--output", str(tmp_path)],
+            [
+                "init",
+                "--app-name",
+                "TestApp",
+                "--bundle-id",
+                "com.test.app",
+                "--output",
+                str(tmp_path),
+            ],
         )
 
         assert result.exit_code == 0
@@ -212,7 +244,3 @@ class TestVersionOption:
 
         assert result.exit_code == 0
         assert "0.1.0" in result.output
-
-
-# Import Config for tests
-from appscreen.config import Config, AppConfig

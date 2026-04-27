@@ -1,9 +1,8 @@
 """Creative layouts for screenshots with visual effects."""
 
 import math
-from typing import Tuple
 
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageFilter
 
 from .base import BaseLayout
 
@@ -107,9 +106,17 @@ class FanLayout(BaseLayout):
             rad = math.radians(angle - base_rotation)
             if self.direction in ["up", "down"]:
                 offset_x = int(self.radius * math.sin(rad))
-                offset_y = int(self.radius * math.cos(rad)) if self.direction == "up" else -int(self.radius * math.cos(rad))
+                offset_y = (
+                    int(self.radius * math.cos(rad))
+                    if self.direction == "up"
+                    else -int(self.radius * math.cos(rad))
+                )
             else:
-                offset_x = int(self.radius * math.cos(rad)) if self.direction == "left" else -int(self.radius * math.cos(rad))
+                offset_x = (
+                    int(self.radius * math.cos(rad))
+                    if self.direction == "left"
+                    else -int(self.radius * math.cos(rad))
+                )
                 offset_y = int(self.radius * math.sin(rad))
 
             # Center the rotated image at the calculated position
@@ -117,7 +124,7 @@ class FanLayout(BaseLayout):
             y = center_y + offset_y - rotated.height // 2
 
             # Paste with transparency support
-            if rotated.mode == 'RGBA':
+            if rotated.mode == "RGBA":
                 canvas.paste(rotated, (x, y), rotated)
             else:
                 canvas.paste(rotated, (x, y))
@@ -171,12 +178,7 @@ class PerspectiveLayout(BaseLayout):
 
         # Calculate perspective transform
         # Top corners shift by skew_y percentage of width
-        # Side corners shift by skew_x percentage of height
-        skew_x_offset = int(h * self.skew_x)
         skew_y_offset = int(w * self.skew_y)
-
-        # Source points (original corners)
-        src_points = [(0, 0), (w, 0), (w, h), (0, h)]
 
         # Destination points (skewed corners)
         dst_points = [
@@ -189,7 +191,6 @@ class PerspectiveLayout(BaseLayout):
         # Create new image with extra space for the skew
         new_w = w + abs(skew_y_offset) * 2
         new_h = h
-        result = Image.new('RGBA', (new_w, new_h), (0, 0, 0, 0))
 
         # Apply simple perspective using PIL's transform
         # For a more accurate perspective, we'd need to use OpenCV or similar
@@ -197,10 +198,16 @@ class PerspectiveLayout(BaseLayout):
         transformed = image.transform(
             (new_w, new_h),
             Image.Transform.QUAD,
-            data=[dst_points[0][0], dst_points[0][1],
-                   dst_points[1][0], dst_points[1][1],
-                   dst_points[2][0], dst_points[2][1],
-                   dst_points[3][0], dst_points[3][1]],
+            data=[
+                dst_points[0][0],
+                dst_points[0][1],
+                dst_points[1][0],
+                dst_points[1][1],
+                dst_points[2][0],
+                dst_points[2][1],
+                dst_points[3][0],
+                dst_points[3][1],
+            ],
             resample=Image.Resampling.BICUBIC,
         )
 
@@ -218,21 +225,21 @@ class PerspectiveLayout(BaseLayout):
             Image with shadow
         """
         # Create shadow layer
-        shadow = Image.new('RGBA', image.size, (0, 0, 0, 0))
+        shadow = Image.new("RGBA", image.size, (0, 0, 0, 0))
 
         # Extract alpha channel and create shadow
-        if image.mode == 'RGBA':
+        if image.mode == "RGBA":
             alpha = image.split()[-1]
-            shadow = Image.new('RGBA', image.size, (0, 0, 0, 100))
+            shadow = Image.new("RGBA", image.size, (0, 0, 0, 100))
             shadow.putalpha(alpha)
 
         # Offset and blur the shadow
         shadow = shadow.filter(ImageFilter.GaussianBlur(blur))
 
         # Composite shadow under the image
-        result = Image.new('RGBA', image.size, (0, 0, 0, 0))
+        result = Image.new("RGBA", image.size, (0, 0, 0, 0))
         result.paste(shadow, (offset, offset))
-        result.paste(image, (0, 0), image if image.mode == 'RGBA' else None)
+        result.paste(image, (0, 0), image if image.mode == "RGBA" else None)
 
         return result
 
@@ -265,8 +272,8 @@ class PerspectiveLayout(BaseLayout):
         scaled = self._scale_to_fit(screenshot, available_width, available_height)
 
         # Convert to RGBA for transparency support
-        if scaled.mode != 'RGBA':
-            scaled = scaled.convert('RGBA')
+        if scaled.mode != "RGBA":
+            scaled = scaled.convert("RGBA")
 
         # Apply perspective
         transformed = self._apply_perspective(scaled)
@@ -359,15 +366,15 @@ class Stack3DLayout(BaseLayout):
             # Rotate the image
             if angle != 0:
                 # Convert to RGBA for transparency
-                if img.mode != 'RGBA':
-                    img = img.convert('RGBA')
+                if img.mode != "RGBA":
+                    img = img.convert("RGBA")
                 rotated = img.rotate(angle, expand=True, resample=Image.Resampling.BICUBIC)
             else:
                 rotated = img
 
             # Add subtle shadow for depth
-            if rotated.mode != 'RGBA':
-                rotated = rotated.convert('RGBA')
+            if rotated.mode != "RGBA":
+                rotated = rotated.convert("RGBA")
 
             # Position the layer
             x = base_x - rotated.width // 2 + layer_offset
@@ -420,7 +427,9 @@ class TripleRowLayout(BaseLayout):
             ValueError: If screenshots list doesn't contain exactly three images
         """
         if len(screenshots) != 3:
-            raise ValueError(f"TripleRowLayout requires exactly 3 screenshots, got {len(screenshots)}")
+            raise ValueError(
+                f"TripleRowLayout requires exactly 3 screenshots, got {len(screenshots)}"
+            )
 
         canvas = self.create_canvas()
 

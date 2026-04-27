@@ -43,7 +43,9 @@ class DuoHorizontalLayout(BaseLayout):
             ValueError: If screenshots list doesn't contain exactly two images
         """
         if len(screenshots) != 2:
-            raise ValueError(f"DuoHorizontalLayout requires exactly 2 screenshots, got {len(screenshots)}")
+            raise ValueError(
+                f"DuoHorizontalLayout requires exactly 2 screenshots, got {len(screenshots)}"
+            )
 
         canvas = self.create_canvas()
 
@@ -104,7 +106,9 @@ class DuoVerticalLayout(BaseLayout):
             ValueError: If screenshots list doesn't contain exactly two images
         """
         if len(screenshots) != 2:
-            raise ValueError(f"DuoVerticalLayout requires exactly 2 screenshots, got {len(screenshots)}")
+            raise ValueError(
+                f"DuoVerticalLayout requires exactly 2 screenshots, got {len(screenshots)}"
+            )
 
         canvas = self.create_canvas()
 

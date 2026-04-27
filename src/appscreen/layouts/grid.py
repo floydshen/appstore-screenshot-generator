@@ -43,7 +43,9 @@ class Grid2x2Layout(BaseLayout):
             ValueError: If screenshots list doesn't contain exactly four images
         """
         if len(screenshots) != 4:
-            raise ValueError(f"Grid2x2Layout requires exactly 4 screenshots, got {len(screenshots)}")
+            raise ValueError(
+                f"Grid2x2Layout requires exactly 4 screenshots, got {len(screenshots)}"
+            )
 
         canvas = self.create_canvas()
 
@@ -66,18 +68,30 @@ class Grid2x2Layout(BaseLayout):
             ),
             # Top-right
             (
-                self.padding + available_width + self.spacing + (available_width - scaled[1].width) // 2,
+                self.padding
+                + available_width
+                + self.spacing
+                + (available_width - scaled[1].width) // 2,
                 self.padding + (available_height - scaled[1].height) // 2,
             ),
             # Bottom-left
             (
                 self.padding + (available_width - scaled[2].width) // 2,
-                self.padding + available_height + self.spacing + (available_height - scaled[2].height) // 2,
+                self.padding
+                + available_height
+                + self.spacing
+                + (available_height - scaled[2].height) // 2,
             ),
             # Bottom-right
             (
-                self.padding + available_width + self.spacing + (available_width - scaled[3].width) // 2,
-                self.padding + available_height + self.spacing + (available_height - scaled[3].height) // 2,
+                self.padding
+                + available_width
+                + self.spacing
+                + (available_width - scaled[3].width) // 2,
+                self.padding
+                + available_height
+                + self.spacing
+                + (available_height - scaled[3].height) // 2,
             ),
         ]
 
